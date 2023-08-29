@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF Text Highlighter</title>
+    <style>
+        /* Add your custom CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        .search-text {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto; /* Adjusted column layout */
+            gap: 10px;
+            align-items: center;
+        }
+        .search-text input[type="text"] {
+            width: 70%; /* Adjusted width */
+        }
+        .delete-search-text {
+            border: none;
+            
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .add-button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .download-button {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>PDF Text Highlighter</h1>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <label for="pdf">Select a PDF file:</label>
+        <input type="file" name="pdf" accept=".pdf" required>
+        
+        <div id="search-texts">
+            <div class="search-text">
+                <label for="search_text">Search Text:</label>
+                <input type="text" name="search_text[]" required>
+                <input type="color" name="highlight_color[]" required>
+                <button type="button" class="delete-search-text delete-red">Delete</button>
+            </div>
+        </div>
+        
+        <button type="button" id="add-search-text" class="add-button">Add Another Search Text</button>
+        
+        <input type="submit" value="Highlight and Download" class="download-button">
+    </form>
+
+    <script>
+        document.getElementById("add-search-text").addEventListener("click", function() {
+            const searchTextsDiv = document.getElementById("search-texts");
+            const newTextDiv = document.createElement("div");
+            newTextDiv.className = "search-text";
+            newTextDiv.innerHTML = `
+                <label for="search_text">Search Text:</label>
+                <input type="text" name="search_text[]" required>
+                <input type="color" name="highlight_color[]" required>
+                <button type="button" class="delete-search-text delete-red">Delete</button>
+            `;
+            searchTextsDiv.appendChild(newTextDiv);
+
+            // Attach a delete event listener to the new delete button
+            newTextDiv.querySelector(".delete-search-text").addEventListener("click", function() {
+                searchTextsDiv.removeChild(newTextDiv);
+            });
+        });
+
+        // Attach delete event listeners to the initial delete buttons
+        const initialDeleteButtons = document.querySelectorAll(".delete-search-text");
+        initialDeleteButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                const searchTextDiv = button.parentElement;
+                const searchTextsDiv = searchTextDiv.parentElement;
+                searchTextsDiv.removeChild(searchTextDiv);
+            });
+        });
+    </script>
+</body>
+</html>
